@@ -1,4 +1,9 @@
 #!/bin/bash
+
+function check_mcli() {
+    type mcli >/dev/null 2>/dev/null && return 0 || return 1
+}
+
 function start() {
 
     case $1 in
@@ -10,13 +15,13 @@ function start() {
         ;;
         *)
             echo "not set type, exit"
-            exit 1
+            return 1
     esac
 
     [ ! -f .env ] && {
         cp .env.example .env
         echo "please, fill data in .env file and try again"
-        exit 1
+        return 1
     }
 
     docker-compose -f $file up -d
@@ -33,7 +38,7 @@ function stop() {
         ;;
         *)
             echo "not set type, exit"
-            exit 1
+            return 1
     esac
 
     docker-compose -f $file stop
@@ -115,4 +120,9 @@ function randomNumber() {
     local range=$(( $end - $start ))
 
     echo $(( $start + $RANDOM % $range ))
+}
+
+function randomString() {
+    local string=$(openssl rand -base64 $1)
+    echo $string
 }

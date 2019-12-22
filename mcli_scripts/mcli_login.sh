@@ -1,13 +1,15 @@
 #!/bin/bash
 source ../.env
+source ../lib/lib.sh
 
-SERVER_NAME=${1:-minio}
-
-type mcli >/dev/null 2>/dev/null && {
-
-    mcli config host add $SERVER_NAME $S3_DOMAIN $ACCESS_KEY $SECRET_KEY
-
-} || {
-    echo "mcli not installed is you system, please run ./mcli_install.sh before"
-    exit 1
+check_mcli || {
+    echo "mcli not installed, run ./mcli_install.sh"
+    exit 0
 }
+
+[ -z $SERVER_NAME ] && {
+    SERVER_NAME=${1:-minio}
+    echo SERVER_NAME=$SERVER_NAME >> ../.env
+}
+
+mcli config host add $SERVER_NAME $S3_DOMAIN $ACCESS_KEY $SECRET_KEY

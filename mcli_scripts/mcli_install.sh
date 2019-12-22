@@ -1,4 +1,13 @@
 #!/bin/bash
+source ../.env
+source ../lib/lib.sh
+
+INSTALL_PATH=/usr/local/bin
+
+check_mcli && {
+    echo "mcli already installed."
+    exit 0
+}
 
 case "$OSTYPE" in
     "darwin"*)
@@ -17,9 +26,9 @@ esac
 
 wget $link
 chmod +x ./mc
-sudo mv ./mc /usr/local/bin/mcli
+sudo mv ./mc $INSTALL_PATH/mcli
 
 echo "mcli Installed"
 echo ""
 
-/usr/local/bin/mcli --version
+$INSTALL_PATH/mcli --version
