@@ -123,6 +123,7 @@ function randomNumber() {
 }
 
 function randomString() {
+    # TODO удалять "/"
     local string=$(openssl rand -base64 $1)
     echo $string
 }
