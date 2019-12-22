@@ -12,6 +12,8 @@ SECRET_KEY=$(randomString 30)
 
 mcli admin user add $SERVER_NAME $ACCESS_KEY $SECRET_KEY
 
+[ ! -d users ] && mkdir users
+
 touch users/$ACCESS_KEY
 echo $SECRET_KEY >> users/$ACCESS_KEY
 

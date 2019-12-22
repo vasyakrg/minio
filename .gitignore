@@ -1,3 +1,4 @@
 /cache/*
+/mcli_scripts/users/*
 .env
 !.gitkeep
