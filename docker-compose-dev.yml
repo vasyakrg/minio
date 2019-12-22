@@ -1,0 +1,27 @@
+version: '3.5'
+services:
+    minio1:
+        image: minio/minio
+        restart: always
+        container_name: ${COMPOSE_PROJECT_NAME}_server
+        ports:
+            - ${NGINX_PORT}:9000
+        environment:
+            MINIO_ACCESS_KEY: ${ACCESS_KEY}
+            MINIO_SECRET_KEY: ${SECRET_KEY}
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 30s
+            timeout: 20s
+        volumes:
+            - data1-1:/data1
+        command: server /data1
+        networks:
+            - minio_net
+
+networks:
+    minio_net:
+        name: minio
+
+volumes:
+  data1-1:
