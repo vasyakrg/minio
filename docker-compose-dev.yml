@@ -5,7 +5,7 @@ services:
         restart: always
         container_name: ${COMPOSE_PROJECT_NAME}_node1
         ports:
-            ${NGINX_PORT}:9000
+            - ${NGINX_PORT}:9000
         environment:
             MINIO_ACCESS_KEY: ${ACCESS_KEY}
             MINIO_SECRET_KEY: ${SECRET_KEY}
