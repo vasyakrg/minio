@@ -42,7 +42,7 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data2-1:/data1
+            - data1-1:/data1
         command: server http://minio{1...4}/data{1...2}
         networks:
             - minio_net
@@ -59,7 +59,7 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data3-1:/data1
+            - data1-1:/data1
         command: server http://minio{1...4}/data{1...2}
         networks:
             - minio_net
@@ -76,7 +76,7 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data4-1:/data1
+            - data1-1:/data1
         command: server http://minio{1...4}/data{1...2}
         networks:
             - minio_net
@@ -87,6 +87,4 @@ networks:
 
 volumes:
   data1-1:
-  data2-1:
-  data3-1:
-  data4-1:
+    external: true
