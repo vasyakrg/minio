@@ -26,7 +26,7 @@ services:
             timeout: 20s
         volumes:
             - data1:/data1/node1
-        command: server http://minio{1...3}/data1
+        command: server /data1/node1
         networks:
             - minio_net
 
@@ -43,7 +43,7 @@ services:
             timeout: 20s
         volumes:
             - data1:/data1/node2
-        command: server http://minio{1...3}/data1
+        command: server /data1/node2
         networks:
             - minio_net
 
@@ -60,7 +60,7 @@ services:
             timeout: 20s
         volumes:
             - data1:/data1/node3
-        command: server http://minio{1...3}/data1
+        command: server /data1/node3
         networks:
             - minio_net
 
