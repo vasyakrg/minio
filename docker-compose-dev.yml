@@ -1,22 +1,11 @@
 version: '3.5'
 services:
-    nginx:
-        image: nginx:latest
-        restart: always
-        container_name: ${COMPOSE_PROJECT_NAME}_nginx
-        ports:
-            - ${NGINX_PORT}:80
-        volumes:
-            - ./hosts:/etc/nginx/conf.d
-            - ./cache:/var/cache/nginx/minio_cache
-            - ./logs:/var/log/nginx
-        networks:
-            - minio_net
-
     minio1:
         image: minio/minio
         restart: always
         container_name: ${COMPOSE_PROJECT_NAME}_node1
+        ports:
+            ${NGINX_PORT}:9000
         environment:
             MINIO_ACCESS_KEY: ${ACCESS_KEY}
             MINIO_SECRET_KEY: ${SECRET_KEY}
@@ -25,42 +14,8 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data1:/data1/node1
-        command: server /data1/node1
-        networks:
-            - minio_net
-
-    minio2:
-        image: minio/minio
-        restart: always
-        container_name: ${COMPOSE_PROJECT_NAME}_node2
-        environment:
-            MINIO_ACCESS_KEY: ${ACCESS_KEY}
-            MINIO_SECRET_KEY: ${SECRET_KEY}
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-            interval: 30s
-            timeout: 20s
-        volumes:
-            - data1:/data1/node2
-        command: server /data1/node2
-        networks:
-            - minio_net
-
-    minio3:
-        image: minio/minio
-        restart: always
-        container_name: ${COMPOSE_PROJECT_NAME}_node3
-        environment:
-            MINIO_ACCESS_KEY: ${ACCESS_KEY}
-            MINIO_SECRET_KEY: ${SECRET_KEY}
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-            interval: 30s
-            timeout: 20s
-        volumes:
-            - data1:/data1/node3
-        command: server /data1/node3
+            - disk1:/data1
+        command: server /data1
         networks:
             - minio_net
 
@@ -69,5 +24,5 @@ networks:
         name: minio
 
 volumes:
-  data1:
+  disk1:
     external: true
