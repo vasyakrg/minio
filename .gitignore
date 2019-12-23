@@ -2,3 +2,4 @@
 /mcli_scripts/users/*
 .env
 !.gitkeep
+/logs/*.log
