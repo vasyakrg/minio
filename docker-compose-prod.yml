@@ -25,9 +25,11 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data1-1:/data1
-            - data2-1:/data2
-        command: server http://minio{1...4}/data{1...2}
+            - disk1:/disk1/node1
+            - disk2:/disk2/node1
+            - disk3:/disk3/node1
+            - disk4:/disk4/node1
+        command: server /disk1/node1 /disk2/node1 /disk3/node1 /disk4/node1
         networks:
             - minio_net
 
@@ -43,9 +45,11 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data1-1:/data1
-            - data2-1:/data2
-        command: server http://minio{1...4}/data{1...2}
+            - disk1:/disk1/node3
+            - disk2:/disk2/node3
+            - disk3:/disk3/node3
+            - disk4:/disk4/node3
+        command: server /disk1/node3 /disk2/node3 /disk3/node3 /disk4/node3
         networks:
             - minio_net
 
@@ -61,36 +65,21 @@ services:
             interval: 30s
             timeout: 20s
         volumes:
-            - data1-1:/data1
-            - data2-1:/data2
-        command: server http://minio{1...4}/data{1...2}
+            - disk1:/disk1/node4
+            - disk2:/disk2/node4
+            - disk3:/disk3/node4
+            - disk4:/disk4/node4
+        command: server /disk1/node4 /disk2/node4 /disk3/node4 /disk4/node4
         networks:
             - minio_net
 
-    minio4:
-        image: minio/minio
-        restart: always
-        container_name: ${COMPOSE_PROJECT_NAME}_node4
-        environment:
-            MINIO_ACCESS_KEY: ${ACCESS_KEY}
-            MINIO_SECRET_KEY: ${SECRET_KEY}
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-            interval: 30s
-            timeout: 20s
-        volumes:
-            - data1-1:/data1
-            - data2-1:/data2
-        command: server http://minio{1...4}/data{1...2}
-        networks:
-            - minio_net
 
 networks:
     minio_net:
         name: minio
 
 volumes:
-  data1-1:
-    external: true
-  data2-1:
-    external: true
+  disk1:
+  disk2:
+  disk3:
+  disk4:
