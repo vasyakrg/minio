@@ -92,5 +92,5 @@ networks:
 volumes:
   data1-1:
     external: true
-  data1-1:
+  data2-1:
     external: true
