@@ -1,0 +1,61 @@
+user www-data;
+worker_processes 4;
+
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    
+    sendfile on;
+    keepalive_timeout 120;
+    client_max_body_size 20m; 
+    
+    upstream backend {
+            server $BACKEND_NAME;
+        }
+        
+    server {
+            listen 80;
+            root $VIRTUAL_ROOT; # путь к WP
+            index index.php;
+
+            gzip on; # включаем сжатие gzip
+            gzip_disable "msie6";
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
+
+            location ~ /\. {
+                    deny all; # запрет для скрытых файлов
+            }
+
+            location ~* /(?:uploads|files)/.*\.php$ {
+                    deny all; # запрет для загруженных скриптов
+            }
+
+            location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+                    access_log off;
+                    log_not_found off;
+                    expires max; # кеширование статики
+            }
+
+            location / {
+                    try_files $uri $uri/ /index.php?$args; # permalinks
+            }
+
+            location ~ \.php$ {
+                    try_files $uri =404;
+                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                    fastcgi_pass backend;
+                    fastcgi_index index.php;
+                    include fastcgi_params;
+                    fastcgi_param PHP_VALUE "upload_max_filesize=128M \n post_max_size=128M";
+                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    fastcgi_param PATH_INFO $fastcgi_path_info;
+            }
+    }
+}

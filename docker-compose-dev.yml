@@ -4,8 +4,10 @@ services:
         image: minio/minio
         restart: always
         container_name: ${COMPOSE_PROJECT_NAME}_node1
-        ports:
-            - ${NGINX_PORT}:9000
+        # ports:
+        #     - 9000:9000
+        expose:
+        - ${BACKEND_PORT}
         environment:
             MINIO_ACCESS_KEY: ${ACCESS_KEY}
             MINIO_SECRET_KEY: ${SECRET_KEY}
@@ -19,9 +21,35 @@ services:
         networks:
             - minio_net
 
+    nginx:
+        image: nginx
+        restart: always
+        container_name: ${COMPOSE_PROJECT_NAME}_nginx
+        depends_on:
+        - minio1
+        # ports:
+        # - 80:80
+        expose:
+        - ${NGINX_PORT}
+        volumes:
+        - ./nginx.conf.template:/etc/nginx/nginx.conf.template:ro
+        environment:
+        - VIRTUAL_ROOT=/var/www/html
+        - LETSENCRYPT_HOST=${SERVER_NAME}.${DOMAIN_NAME},www.${SERVER_NAME}.${DOMAIN_NAME}
+        - VIRTUAL_HOST=${LETSENCRYPT_HOST}
+        - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+        - BACKEND_NAME=${COMPOSE_PROJECT_NAME}_node1:${BACKEND_PORT}
+        command: /bin/bash -c "envsubst '$$VIRTUAL_ROOT $$BACKEND_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"
+        networks:
+        - minio_net
+        - webproxy
+
 networks:
     minio_net:
         name: minio
+    webproxy:
+        external:
+            name: ${WEBPROXY_NETWORK}
 
 volumes:
   disk1:
