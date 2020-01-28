@@ -35,7 +35,7 @@ services:
         - ./nginx.conf.template:/etc/nginx/nginx.conf.template:ro
         environment:
         - VIRTUAL_ROOT=/var/www/html
-        - LETSENCRYPT_HOST=${SERVER_NAME}.${DOMAIN_NAME},www.${SERVER_NAME}.${DOMAIN_NAME}
+        - LETSENCRYPT_HOST=${SERVER_NAME}.${DOMAIN_NAME}
         - VIRTUAL_HOST=${LETSENCRYPT_HOST}
         - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
         - BACKEND_NAME=${COMPOSE_PROJECT_NAME}_node1:${BACKEND_PORT}
