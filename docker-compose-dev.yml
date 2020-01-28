@@ -39,7 +39,7 @@ services:
         - VIRTUAL_HOST=${SERVER_NAME}.${DOMAIN_NAME}
         - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
         - BACKEND_NAME=${COMPOSE_PROJECT_NAME}_node1:${BACKEND_PORT}
-        command: /bin/bash -c "envsubst '$$SERVER_NAME $$DOMAIN_NAME $$COMPOSE_PROJECT_NAME $$BACKEND_PORT' < /etc/nginx/minio.conf.template > /etc/nginx/conf.d/minio.conf && exec nginx -g 'daemon off;'"
+        command: /bin/bash -c "envsubst '$$VIRTUAL_HOST $$BACKEND_NAME' < /etc/nginx/minio.conf.template > /etc/nginx/conf.d/minio.conf && exec nginx -g 'daemon off;'"
         networks:
         - minio_net
         - webproxy

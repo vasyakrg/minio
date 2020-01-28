@@ -1,6 +1,6 @@
 server {
  listen 80;
- server_name ${SERVER_NAME}.${DOMAIN_NAME};
+ server_name $VIRTUAL_HOST;
 
  # To allow special characters in headers
  ignore_invalid_headers off;
@@ -23,7 +23,7 @@ server {
    proxy_http_version 1.1;
    proxy_set_header Connection "";
 
-   proxy_pass http://${COMPOSE_PROJECT_NAME}_node1:${BACKEND_PORT}; # If you are using docker-compose this would be the hostname i.e. minio
+   proxy_pass http://$BACKEND_NAME; # If you are using docker-compose this would be the hostname i.e. minio
    # Health Check endpoint might go here. See https://www.nginx.com/resources/wiki/modules/healthcheck/
    # /minio/health/live;
  }
