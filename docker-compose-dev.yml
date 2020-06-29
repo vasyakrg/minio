@@ -34,12 +34,17 @@ services:
         volumes:
         - ./minio.conf.template:/etc/nginx/minio.conf.template:ro
         environment:
-        - VIRTUAL_ROOT=/var/www/html
-        - LETSENCRYPT_HOST=${SERVER_NAME}.${DOMAIN_NAME}
         - VIRTUAL_HOST=${SERVER_NAME}.${DOMAIN_NAME}
-        - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
         - BACKEND_NAME=${COMPOSE_PROJECT_NAME}_node1:${BACKEND_PORT}
         command: /bin/bash -c "envsubst '$$VIRTUAL_HOST $$BACKEND_NAME' < /etc/nginx/minio.conf.template > /etc/nginx/conf.d/minio.conf && exec nginx -g 'daemon off;'"
+        labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.minio-amega.entrypoints=https"
+        - "traefik.http.routers.minio-amega.rule=Host(`s3.amegaserver.com`)"
+        - "traefik.http.routers.minio-amega.tls=true"
+        - "traefik.http.routers.minio-amega.tls.certresolver=letsEncrypt"
+        - "traefik.http.services.minio-amega-service.loadbalancer.server.port=80"
+        - "traefik.docker.network=webproxy"
         networks:
         - minio_net
         - webproxy

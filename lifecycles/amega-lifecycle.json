@@ -1,0 +1,11 @@
+{
+    "Rules": [
+        {
+            "Expiration": {
+                "Days": 30
+            },
+            "ID": "Delete temporary uploads",
+            "Status": "Enabled"
+        }
+    ]
+}
